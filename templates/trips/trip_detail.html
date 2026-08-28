@@ -129,50 +129,47 @@
                 <table class="table table-striped table-hover">
                     <thead class="table-dark">
                         <tr>
-                            <th>Student Name</th>
+                            <th>Name</th>
                             <th>Form Class</th>
                             <th>Slip Returned</th>
+                            <th>Date Returned</th>
                             <th>Payment Received</th>
-                            <th>Consent Given</th>
-                            <th>Emergency Contact</th>
+                            <th>Overdue</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for response in responses %}
-                            <tr {% if response.is_overdue %}class="table-danger"{% endif %}>
+                            <tr {% if response.is_overdue and not response.slip_returned %}class="table-danger"{% endif %}>
                                 <td>
                                     {{ response.student.first_name }} {{ response.student.last_name }}
-                                    {% if response.is_overdue %}
-                                        <span class="badge bg-danger ms-2">OVERDUE</span>
-                                    {% endif %}
                                 </td>
                                 <td><span class="badge bg-secondary">{{ response.student.form_class }}</span></td>
                                 <td>
                                     {% if response.slip_returned %}
-                                        <span class="badge bg-success">✓ Returned</span>
+                                        <span class="text-success" aria-label="Slip returned" title="Slip returned">☑</span>
                                     {% else %}
-                                        <span class="badge bg-danger">✗ Pending</span>
+                                        <span class="text-muted" aria-label="Slip not returned" title="Slip not returned">☐</span>
                                     {% endif %}
                                 </td>
+                                <td>{{ response.date_returned|date:"d M Y"|default:"-" }}</td>
                                 <td>
                                     {% if response.payment_received %}
-                                        <span class="badge bg-success">✓ Paid</span>
+                                        <span class="text-success" aria-label="Payment received" title="Payment received">☑</span>
                                     {% else %}
-                                        <span class="badge bg-warning">✗ Pending</span>
+                                        <span class="text-muted" aria-label="Payment not received" title="Payment not received">☐</span>
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if response.consent_given %}
-                                        <span class="badge bg-success">✓ Given</span>
+                                    {% if response.is_overdue and not response.slip_returned %}
+                                        <span class="badge bg-danger">OVERDUE</span>
                                     {% else %}
-                                        <span class="badge bg-danger">✗ No</span>
+                                        <span class="text-muted">-</span>
                                     {% endif %}
                                 </td>
-                                <td>{{ response.emergency_contact_number }}</td>
                                 <td>
                                     <a href="{% url 'trips:record_slip' trip.pk response.student.pk %}" class="btn btn-sm btn-outline-primary">Record</a>
-                                                                    <a href="{% url 'trips:download_slip_pdf_student' trip.pk response.student.pk %}" class="btn btn-sm btn-outline-success" title="Download as PDF">PDF</a>
+                                    <a href="{% url 'trips:download_slip_pdf_student' trip.pk response.student.pk %}" class="btn btn-sm btn-outline-success" title="Download as PDF">PDF</a>
                                 </td>
                             </tr>
                         {% endfor %}
