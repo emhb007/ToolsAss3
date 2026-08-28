@@ -43,7 +43,7 @@ class TripForm(forms.ModelForm):
                 'class': 'form-control',
                 'type': 'time'
             }),
-            'cost': forms.DecimalInput(attrs={
+            'cost': forms.DecimalField(attrs={
                 'class': 'form-control',
                 'placeholder': '0.00',
                 'step': '0.01'
