@@ -3,28 +3,92 @@
 {% block title %}Trips - TripAdmin{% endblock %}
 
 {% block content %}
-<h1>Trips</h1>
-<p class="lead">View and manage all your trips.</p>
-<hr>
-
-<div class="table-responsive">
-    <table class="table table-striped table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>Trip Name</th>
-                <th>Destination</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="5" class="text-center text-muted">No trips found. <a href="{% url 'trips:new_trip' %}">Create one now!</a></td>
-            </tr>
-        </tbody>
-    </table>
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Trips</h1>
+        <p class="lead">View and manage all your trips.</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'trips:new_trip' %}" class="btn btn-success btn-lg">Add New Trip</a>
+    </div>
 </div>
 
-<a href="{% url 'trips:new_trip' %}" class="btn btn-success">Add New Trip</a>
+<hr class="mb-4">
+
+{% if trips %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Trip Name</th>
+                    <th>Destination</th>
+                    <th>Date</th>
+                    <th>Year Group</th>
+                    <th>Cost</th>
+                    <th>Students</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trip in trips %}
+                    <tr>
+                        <td><strong>{{ trip.name }}</strong></td>
+                        <td>{{ trip.destination }}</td>
+                        <td>{{ trip.trip_date|date:"d M Y" }}</td>
+                        <td><span class="badge bg-primary">{{ trip.year_group }}</span></td>
+                        <td>£{{ trip.cost }}</td>
+                        <td>
+                            <span class="badge bg-info">{{ trip.students.count }}</span>
+                        </td>
+                        <td>
+                            <a href="{% url 'trips:trip_detail' trip.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <div class="alert alert-info" role="alert">
+        <strong>No trips found.</strong> <a href="{% url 'trips:new_trip' %}">Create one now!</a>
+    </div>
+{% endif %}
 {% endblock %}
