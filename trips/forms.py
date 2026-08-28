@@ -210,3 +210,104 @@ class TripResponseForm(forms.ModelForm):
         
         return cleaned_data
 
+
+class StudentBulkAddForm(forms.Form):
+    """Form for bulk adding students by pasting a list in the format: Firstname Lastname, FormClass"""
+    
+    students_data = forms.CharField(
+        label='Student List',
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 10,
+            'placeholder': 'Paste one student per line in the format:\nJohn Doe, 7A\nJane Smith, 7B\nMark Johnson, 8A',
+            'style': 'font-family: monospace;'
+        }),
+        help_text='Format: Firstname Lastname, FormClass (one per line)'
+    )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Set up crispy forms helper with Bootstrap 5
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-3'
+        self.helper.field_class = 'col-lg-9'
+        
+        # Define the form layout
+        self.helper.layout = Layout(
+            HTML('<div class="alert alert-info" role="alert">'),
+            HTML('<strong>Instructions:</strong> Paste student data in the format below, one per line:'),
+            HTML('<code>Firstname Lastname, FormClass</code>'),
+            HTML('</div>'),
+            'students_data',
+            HTML('<hr class="my-4">'),
+            Submit('submit', 'Add Students', css_class='btn btn-primary btn-lg me-2'),
+            HTML('<a href="javascript:history.back()" class="btn btn-secondary btn-lg">Cancel</a>'),
+        )
+    
+    def clean_students_data(self):
+        """Parse and validate the student data format."""
+        data = self.cleaned_data.get('students_data', '').strip()
+        
+        if not data:
+            raise ValidationError('Please enter at least one student.')
+        
+        lines = data.strip().split('\n')
+        students = []
+        errors = []
+        
+        for line_num, line in enumerate(lines, 1):
+            line = line.strip()
+            
+            # Skip empty lines
+            if not line:
+                continue
+            
+            # Check format: "Firstname Lastname, FormClass"
+            if ',' not in line:
+                errors.append(f'Line {line_num}: Missing comma separator. Expected format: "Firstname Lastname, FormClass"')
+                continue
+            
+            parts = line.split(',')
+            if len(parts) != 2:
+                errors.append(f'Line {line_num}: Too many commas. Expected format: "Firstname Lastname, FormClass"')
+                continue
+            
+            name_part = parts[0].strip()
+            form_class = parts[1].strip()
+            
+            # Validate name has at least two parts (first and last name)
+            name_parts = name_part.split()
+            if len(name_parts) < 2:
+                errors.append(f'Line {line_num}: "{name_part}" - Name must include both first name and last name.')
+                continue
+            
+            if not form_class:
+                errors.append(f'Line {line_num}: Form class cannot be empty.')
+                continue
+            
+            # Extract first and last name (support multi-word names)
+            first_name = name_parts[0]
+            last_name = ' '.join(name_parts[1:])
+            
+            students.append({
+                'first_name': first_name,
+                'last_name': last_name,
+                'form_class': form_class,
+            })
+        
+        # If there are errors, raise ValidationError with all error messages
+        if errors:
+            error_message = 'The following lines could not be parsed:\n' + '\n'.join(errors)
+            raise ValidationError(error_message)
+        
+        if not students:
+            raise ValidationError('No valid student entries found. Please check your format.')
+        
+        # Store parsed students in cleaned_data
+        self.cleaned_data['parsed_students'] = students
+        
+        return data
+
