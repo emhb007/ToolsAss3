@@ -1,0 +1,25 @@
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_django = "django"
+sections = ["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "DJ", "C90"]
+ignore = ["E501"]  # line length handled by black
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tripadmin.settings"
+python_files = ["tests.py", "test_*.py"]
+addopts = "--cov=trips --cov-report=term-missing --cov-fail-under=80"
