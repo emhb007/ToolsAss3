@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from io import BytesIO
+from pypdf import PdfReader, PdfWriter
 from .models import Trip, TripResponse, Student
 from .forms import TripForm, TripResponseForm
 
@@ -211,6 +212,32 @@ def generate_slip_pdf(request, trip_id, student_id=None):
     filename = filename.replace(' ', '_').replace('/', '_')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     
+    return response
+
+
+def generate_all_slips_pdf(request, trip_id):
+    """Generate one PDF containing a permission slip for every linked student."""
+    trip = get_object_or_404(Trip, pk=trip_id)
+    pdf_writer = PdfWriter()
+
+    for student in trip.students.all():
+        context = {
+            'trip': trip,
+            'prefill_student': student,
+        }
+        html_string = render_to_string('trips/permission_slip.html', context)
+        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+        student_pdf = PdfReader(BytesIO(html.write_pdf()))
+
+        for page in student_pdf.pages:
+            pdf_writer.add_page(page)
+
+    pdf_buffer = BytesIO()
+    pdf_writer.write(pdf_buffer)
+
+    response = HttpResponse(pdf_buffer.getvalue(), content_type='application/pdf')
+    filename = trip.name.replace(' ', '_').replace('/', '_')
+    response['Content-Disposition'] = f'attachment; filename="permission_slips_{filename}.pdf"'
     return response
 
 

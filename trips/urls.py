@@ -11,6 +11,7 @@ urlpatterns = [
     path('trips/<int:trip_id>/student/<int:student_id>/record/', views.record_slip, name='record_slip'),
     path('trips/<int:trip_id>/permission-slip/', views.permission_slip, name='permission_slip'),
     path('trips/<int:trip_id>/permission-slip/download/', views.generate_slip_pdf, name='download_slip_pdf'),
+    path('trips/<int:trip_id>/permission-slips/download/', views.generate_all_slips_pdf, name='download_all_slips_pdf'),
     path('trips/<int:trip_id>/student/<int:student_id>/permission-slip/download/', views.generate_slip_pdf, name='download_slip_pdf_student'),
     path('reports/', views.reports, name='reports'),
 ]
