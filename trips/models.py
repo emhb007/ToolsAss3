@@ -85,7 +85,12 @@ class Student(models.Model):
 
 
 class TripResponse(models.Model):
-    """Model representing a student's response/registration for a trip."""
+    """Store a student's trip response and sensitive permission-slip data.
+
+    Emergency contact numbers, medical needs, and parent signature names are
+    sensitive personal data and must be handled according to the school's
+    data protection policy.
+    """
     
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='responses')
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='trip_responses')

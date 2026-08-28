@@ -178,7 +178,10 @@ def new_trip(request):
 @login_required
 @user_passes_test(lambda user: user.is_staff)
 def record_slip(request, trip_id, student_id):
-    """Record a student's trip response/permission slip."""
+    """Record a response, including sensitive contact and medical data.
+
+    Access and retention must comply with the school's data protection policy.
+    """
     # Get the trip and student, or return 404 if not found
     trip = get_object_or_404(Trip, pk=trip_id)
     student = get_object_or_404(Student, pk=student_id)
@@ -253,7 +256,11 @@ def permission_slip(request, trip_id):
 
 
 def generate_slip_pdf(request, trip_id, student_id=None):
-    """Generate a PDF permission slip for a trip, optionally pre-filled with a student."""
+    """Generate a permission-slip PDF containing sensitive personal data.
+
+    Emergency contacts, medical needs, and parent signatures must be handled
+    according to the school's data protection policy.
+    """
     trip = get_object_or_404(Trip, pk=trip_id)
     student = None
     
@@ -289,7 +296,11 @@ def generate_slip_pdf(request, trip_id, student_id=None):
 
 
 def generate_all_slips_pdf(request, trip_id):
-    """Generate one PDF containing a permission slip for every linked student."""
+    """Generate a class-set PDF containing sensitive permission-slip data.
+
+    The exported emergency contacts, medical needs, and parent signatures must
+    be handled according to the school's data protection policy.
+    """
     trip = get_object_or_404(Trip, pk=trip_id)
     pdf_writer = PdfWriter()
 
@@ -347,7 +358,10 @@ def reports(request):
 
 @login_required
 def export_trip_report_csv(request, trip_id):
-    """Export all student responses for a trip as a CSV download."""
+    """Export student responses, including sensitive contact and medical data.
+
+    The CSV must be handled according to the school's data protection policy.
+    """
     trip = get_object_or_404(Trip, pk=trip_id)
     responses = TripResponse.objects.filter(trip=trip).select_related('student')
 
