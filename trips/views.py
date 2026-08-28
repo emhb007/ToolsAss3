@@ -294,9 +294,35 @@ def generate_all_slips_pdf(request, trip_id):
     return response
 
 
+@login_required
 def reports(request):
-    """Generate and view reports."""
-    return render(request, 'trips/reports.html')
+    """Display slip-return progress for all trips."""
+    trips = Trip.objects.annotate(
+        total_students=Count('responses', distinct=True),
+        slips_returned=Count(
+            'responses',
+            filter=Q(responses__slip_returned=True),
+            distinct=True,
+        ),
+    ).order_by('permission_deadline')
+
+    report_trips = []
+    today = timezone.now().date()
+    for trip in trips:
+        outstanding = trip.total_students - trip.slips_returned
+        report_trips.append({
+            'trip': trip,
+            'total_students': trip.total_students,
+            'slips_returned': trip.slips_returned,
+            'percentage_returned': (
+                trip.slips_returned / trip.total_students * 100
+                if trip.total_students else 0
+            ),
+            'outstanding': outstanding,
+            'deadline_passed': trip.permission_deadline < today and outstanding > 0,
+        })
+
+    return render(request, 'trips/reports.html', {'report_trips': report_trips})
 
 
 @login_required

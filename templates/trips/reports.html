@@ -3,38 +3,49 @@
 {% block title %}Reports - TripAdmin{% endblock %}
 
 {% block content %}
-<h1>Trip Reports</h1>
-<p class="lead">Analyze your trips with detailed reports and statistics.</p>
-<hr>
-
-<div class="row">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">📊 Trip Statistics</h5>
-                <p class="card-text">View overall statistics about your trips.</p>
-                <button class="btn btn-outline-primary" disabled>Coming Soon</button>
-            </div>
-        </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Trip Reports</h1>
+        <p class="lead text-muted mb-0">Permission slip progress by trip</p>
     </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">📄 Generate PDF Report</h5>
-                <p class="card-text">Export your trips as a PDF document.</p>
-                <button class="btn btn-outline-success" disabled>Coming Soon</button>
-            </div>
-        </div>
-    </div>
+    <a href="{% url 'trips:trips_list' %}" class="btn btn-outline-secondary">Back to Trips</a>
 </div>
 
-<div class="row mt-4">
-    <div class="col-md-12">
-        <div class="alert alert-info" role="alert">
-            <strong>Reports are coming soon!</strong> Check back later for detailed trip analytics and PDF export functionality.
-        </div>
+{% if report_trips %}
+    <div class="row g-4">
+        {% for report in report_trips %}
+            <div class="col-12">
+                <div class="card {% if report.deadline_passed %}border-danger{% endif %}">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap justify-content-between gap-2 mb-2">
+                            <div>
+                                <h2 class="h5 mb-1">
+                                    <a href="{% url 'trips:trip_report' report.trip.pk %}" class="text-decoration-none">{{ report.trip.name }}</a>
+                                </h2>
+                                <span class="text-muted">{{ report.trip.destination }}</span>
+                            </div>
+                            <div class="text-end">
+                                <div>Deadline: <strong>{{ report.trip.permission_deadline|date:"d M Y" }}</strong></div>
+                                {% if report.deadline_passed %}
+                                    <span class="badge bg-danger">Deadline passed - {{ report.outstanding }} outstanding</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>{{ report.slips_returned }} of {{ report.total_students }} slips returned</span>
+                            <strong>{{ report.percentage_returned|floatformat:0 }}%</strong>
+                        </div>
+                        <div class="progress" role="progressbar" aria-label="{{ report.trip.name }} slips returned" aria-valuenow="{{ report.percentage_returned|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar {% if report.deadline_passed %}bg-danger{% else %}bg-success{% endif %}" style="width: {{ report.percentage_returned }}%;">
+                                {{ report.percentage_returned|floatformat:0 }}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
-</div>
-
-<a href="{% url 'trips:trips_list' %}" class="btn btn-secondary">Back to Trips</a>
+{% else %}
+    <div class="alert alert-info" role="alert">No trips are available to report.</div>
+{% endif %}
 {% endblock %}
