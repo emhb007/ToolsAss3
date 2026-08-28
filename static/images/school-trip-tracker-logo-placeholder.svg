@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="120" viewBox="0 0 320 120" role="img" aria-labelledby="title desc">
+  <title id="title">School Trip Tracker 2026 logo placeholder</title>
+  <desc id="desc">A placeholder school trip tracker logo with a simple bus icon.</desc>
+  <rect width="320" height="120" rx="12" fill="#0d3b66"/>
+  <rect x="18" y="18" width="84" height="84" rx="10" fill="#f4d35e"/>
+  <path d="M36 43h48c5 0 9 4 9 9v28H30V52c0-5 3-9 6-9zm-6 37h69v12H30z" fill="#0d3b66"/>
+  <rect x="39" y="52" width="15" height="12" rx="2" fill="#fff"/>
+  <rect x="63" y="52" width="15" height="12" rx="2" fill="#fff"/>
+  <circle cx="45" cy="91" r="6" fill="#0d3b66"/>
+  <circle cx="78" cy="91" r="6" fill="#0d3b66"/>
+  <text x="120" y="54" fill="#fff" font-family="Arial, sans-serif" font-size="19" font-weight="700">School Trip</text>
+  <text x="120" y="79" fill="#f4d35e" font-family="Arial, sans-serif" font-size="19" font-weight="700">Tracker 2026</text>
+</svg>

@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}Home - TripAdmin{% endblock %}
+{% load static %}
+
+{% block title %}Home - School Trip Tracker 2026{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h1>Welcome to TripAdmin</h1>
+        <img src="{% static 'images/school-trip-tracker-logo-placeholder.svg' %}" alt="School Trip Tracker 2026 logo placeholder" class="img-fluid mb-4" style="width: 320px; height: 120px;">
+        <h1>Welcome to School Trip Tracker 2026</h1>
         <p class="lead">Manage your trips efficiently with our comprehensive trip management system.</p>
         <hr>
         <div class="row mt-5">
