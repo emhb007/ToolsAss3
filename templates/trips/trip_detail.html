@@ -125,6 +125,7 @@
         <h3 class="mb-4">Student Responses</h3>
         
         {% if responses %}
+            <form id="slip-toggle-csrf" class="d-none">{% csrf_token %}</form>
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead class="table-dark">
@@ -146,14 +147,12 @@
                                 </td>
                                 <td><span class="badge bg-secondary">{{ response.student.form_class }}</span></td>
                                 <td>
-                                    {% if response.slip_returned %}
-                                        <span class="text-success" aria-label="Slip returned" title="Slip returned">☑</span>
-                                    {% else %}
-                                        <span class="text-muted" aria-label="Slip not returned" title="Slip not returned">☐</span>
-                                    {% endif %}
+                                    <input type="checkbox" class="form-check-input js-slip-toggle" {% if response.slip_returned %}checked{% endif %}
+                                        data-toggle-url="{% url 'trips:toggle_slip_returned' response.pk %}"
+                                        aria-label="Toggle slip returned for {{ response.student.first_name }} {{ response.student.last_name }}">
                                 </td>
-                                <td>{{ response.date_returned|date:"d M Y"|default:"-" }}</td>
-                                <td>
+                                <td class="js-date-returned">{{ response.date_returned|date:"d M Y"|default:"-" }}</td>
+                                <td class="js-overdue-cell">
                                     {% if response.payment_received %}
                                         <span class="text-success" aria-label="Payment received" title="Payment received">☑</span>
                                     {% else %}
@@ -183,4 +182,47 @@
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.querySelectorAll('.js-slip-toggle').forEach((checkbox) => {
+        checkbox.addEventListener('change', async () => {
+            const previousState = !checkbox.checked;
+            const row = checkbox.closest('tr');
+            const dateCell = row.querySelector('.js-date-returned');
+            const overdueCell = row.querySelector('.js-overdue-cell');
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            checkbox.disabled = true;
+            try {
+                const result = await fetch(checkbox.dataset.toggleUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                });
+
+                if (!result.ok) {
+                    throw new Error('Unable to update slip status');
+                }
+
+                const data = await result.json();
+                checkbox.checked = data.slip_returned;
+                dateCell.textContent = data.date_returned || '-';
+                row.classList.toggle('table-danger', data.overdue);
+                overdueCell.innerHTML = data.overdue
+                    ? '<span class="badge bg-danger">OVERDUE</span>'
+                    : '<span class="text-muted">-</span>';
+            } catch (error) {
+                checkbox.checked = previousState;
+                window.alert('The slip status could not be updated. Please try again.');
+            } finally {
+                checkbox.disabled = false;
+            }
+        });
+    });
+</script>
 {% endblock %}

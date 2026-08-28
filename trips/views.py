@@ -3,9 +3,12 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from django.db.models import Count, Q
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
+from django.utils import timezone
+from django.views.decorators.http import require_POST
 from weasyprint import HTML
 from io import BytesIO
 from pypdf import PdfReader, PdfWriter
@@ -166,6 +169,23 @@ def record_slip(request, trip_id, student_id):
     }
     
     return render(request, 'trips/record_slip.html', context)
+
+
+@login_required
+@user_passes_test(lambda user: user.is_staff)
+@require_POST
+def toggle_slip_returned(request, response_id):
+    """Toggle a trip response's returned status for staff table updates."""
+    response = get_object_or_404(TripResponse, pk=response_id)
+    response.slip_returned = not response.slip_returned
+    response.date_returned = timezone.now().date() if response.slip_returned else None
+    response.save(update_fields=['slip_returned', 'date_returned'])
+
+    return JsonResponse({
+        'slip_returned': response.slip_returned,
+        'date_returned': response.date_returned.isoformat() if response.date_returned else None,
+        'overdue': response.is_overdue and not response.slip_returned,
+    })
 
 
 def permission_slip(request, trip_id):
