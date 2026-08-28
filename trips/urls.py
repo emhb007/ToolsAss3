@@ -8,6 +8,7 @@ urlpatterns = [
     path('trips/', views.TripListView.as_view(), name='trips_list'),
     path('trips/<int:pk>/', views.TripDetailView.as_view(), name='trip_detail'),
     path('trips/<int:pk>/report/', views.TripReportView.as_view(), name='trip_report'),
+    path('trips/<int:trip_id>/report/export/', views.export_trip_report_csv, name='export_trip_report_csv'),
     path('trips/new/', views.TripCreateView.as_view(), name='new_trip'),
     path('trips/<int:trip_id>/student/<int:student_id>/record/', views.record_slip, name='record_slip'),
     path('responses/<int:response_id>/toggle-slip-returned/', views.toggle_slip_returned, name='toggle_slip_returned'),

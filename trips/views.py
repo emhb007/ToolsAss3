@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+import csv
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from django.db.models import Count, Q
@@ -296,4 +297,40 @@ def generate_all_slips_pdf(request, trip_id):
 def reports(request):
     """Generate and view reports."""
     return render(request, 'trips/reports.html')
+
+
+@login_required
+def export_trip_report_csv(request, trip_id):
+    """Export all student responses for a trip as a CSV download."""
+    trip = get_object_or_404(Trip, pk=trip_id)
+    responses = TripResponse.objects.filter(trip=trip).select_related('student')
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = (
+        f'attachment; filename="trip_report_{trip.pk}.csv"'
+    )
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'Name',
+        'Form Class',
+        'Slip Returned',
+        'Date Returned',
+        'Payment Received',
+        'Emergency Contact',
+        'Medical Needs',
+    ])
+
+    for trip_response in responses:
+        writer.writerow([
+            f'{trip_response.student.first_name} {trip_response.student.last_name}',
+            trip_response.student.form_class,
+            'Yes' if trip_response.slip_returned else 'No',
+            trip_response.date_returned.isoformat() if trip_response.date_returned else '',
+            'Yes' if trip_response.payment_received else 'No',
+            trip_response.emergency_contact_number,
+            trip_response.medical_needs,
+        ])
+
+    return response
 

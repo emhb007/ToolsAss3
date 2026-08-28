@@ -9,6 +9,7 @@
         <p class="lead text-muted mb-0">{{ trip.destination }} | {{ trip.trip_date|date:"d M Y" }}</p>
     </div>
     <a href="{% url 'trips:trip_detail' trip.pk %}" class="btn btn-outline-secondary">Back to Trip</a>
+    <a href="{% url 'trips:export_trip_report_csv' trip.pk %}" class="btn btn-outline-success">Export CSV</a>
 </div>
 
 <div class="row g-4">
