@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
+from django.utils import timezone
 
 # Create your models here.
 
@@ -135,4 +136,9 @@ class TripResponse(models.Model):
     def __str__(self):
         """Return string representation of the trip response."""
         return f"{self.student} - {self.trip.name}"
+    
+    @property
+    def is_overdue(self):
+        """Check if permission slip is overdue (past deadline and not returned)."""
+        return not self.slip_returned and timezone.now().date() > self.trip.permission_deadline
 

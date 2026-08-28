@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from django.db.models import Count, Q
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Trip, TripResponse
-from .forms import TripForm
+from django.contrib import messages
+from .models import Trip, TripResponse, Student
+from .forms import TripForm, TripResponseForm
 
 # Create your views here.
 
@@ -113,6 +114,54 @@ class TripCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 def new_trip(request):
     """Create a new trip."""
     return render(request, 'trips/new_trip.html')
+
+
+def record_slip(request, trip_id, student_id):
+    """Record a student's trip response/permission slip."""
+    # Get the trip and student, or return 404 if not found
+    trip = get_object_or_404(Trip, pk=trip_id)
+    student = get_object_or_404(Student, pk=student_id)
+    
+    # Get or create the TripResponse
+    trip_response, created = TripResponse.objects.get_or_create(
+        trip=trip,
+        student=student
+    )
+    
+    if request.method == 'POST':
+        form = TripResponseForm(request.POST, instance=trip_response)
+        if form.is_valid():
+            # Save the form
+            trip_response = form.save()
+            
+            # Check if the response is overdue
+            if trip_response.is_overdue:
+                messages.warning(
+                    request,
+                    f'⚠️ Warning: Permission slip for {student.first_name} {student.last_name} '
+                    f'is overdue (deadline was {trip.permission_deadline.strftime("%d %b %Y")}).'
+                )
+            else:
+                messages.success(
+                    request,
+                    f'✓ Successfully recorded response for {student.first_name} {student.last_name}.'
+                )
+            
+            # Redirect back to trip detail page
+            return redirect('trips:trip_detail', pk=trip_id)
+    else:
+        form = TripResponseForm(instance=trip_response)
+    
+    context = {
+        'form': form,
+        'trip': trip,
+        'student': student,
+        'trip_response': trip_response,
+        'is_new': created,
+    }
+    
+    return render(request, 'trips/record_slip.html', context)
+
 
 
 def reports(request):

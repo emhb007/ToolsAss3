@@ -137,8 +137,13 @@
                     </thead>
                     <tbody>
                         {% for response in responses %}
-                            <tr>
-                                <td>{{ response.student.first_name }} {{ response.student.last_name }}</td>
+                            <tr {% if response.is_overdue %}class="table-danger"{% endif %}>
+                                <td>
+                                    {{ response.student.first_name }} {{ response.student.last_name }}
+                                    {% if response.is_overdue %}
+                                        <span class="badge bg-danger ms-2">OVERDUE</span>
+                                    {% endif %}
+                                </td>
                                 <td><span class="badge bg-secondary">{{ response.student.form_class }}</span></td>
                                 <td>
                                     {% if response.slip_returned %}
@@ -163,7 +168,7 @@
                                 </td>
                                 <td>{{ response.emergency_contact_number }}</td>
                                 <td>
-                                    <a href="#" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a href="{% url 'trips:record_slip' trip.pk response.student.pk %}" class="btn btn-sm btn-outline-primary">Record</a>
                                 </td>
                             </tr>
                         {% endfor %}
