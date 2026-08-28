@@ -8,6 +8,16 @@ from django.utils import timezone
 
 class Trip(models.Model):
     """Model representing a school trip."""
+
+    YEAR_GROUP_CHOICES = [
+        ('Year 8', 'Year 8'),
+        ('Year 9', 'Year 9'),
+        ('Year 10', 'Year 10'),
+        ('Year 11', 'Year 11'),
+        ('Year 12', 'Year 12'),
+        ('Year 13', 'Year 13'),
+        ('Year 14', 'Year 14'),
+    ]
     
     name = models.CharField(max_length=200, help_text="Trip name")
     destination = models.CharField(max_length=200, help_text="Trip destination")
@@ -26,7 +36,8 @@ class Trip(models.Model):
     )
     year_group = models.CharField(
         max_length=50, 
-        help_text="Year group (e.g., Year 7, Year 8)"
+        choices=YEAR_GROUP_CHOICES,
+        help_text="Year group"
     )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -139,14 +150,13 @@ class TripResponse(models.Model):
         ordering = ['trip', 'student']
     
     def clean(self):
-        """Validate that if slip_returned is True, consent_given and parent_signature_name are set."""
+        """Require a parent signature when consent has been given."""
         errors = {}
         
-        if self.slip_returned:
-            if not self.consent_given:
-                errors['consent_given'] = 'Consent must be given when permission slip is returned.'
-            if not self.parent_signature_name:
-                errors['parent_signature_name'] = 'Parent/Guardian signature name is required when permission slip is returned.'
+        if self.consent_given and not self.parent_signature_name:
+            errors['parent_signature_name'] = (
+                'Parent/Guardian signature name is required when consent is given.'
+            )
         
         if errors:
             raise ValidationError(errors)

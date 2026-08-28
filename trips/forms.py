@@ -55,9 +55,8 @@ class TripForm(forms.ModelForm):
             'packed_lunch_required': forms.CheckboxInput(attrs={
                 'class': 'form-check-input'
             }),
-            'year_group': forms.TextInput(attrs={
+            'year_group': forms.Select(attrs={
                 'class': 'form-control',
-                'placeholder': 'e.g., Year 7, Year 8'
             }),
         }
     

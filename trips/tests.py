@@ -67,7 +67,7 @@ class TripResponseValidationTestCase(TestCase):
             form_class='7A',
         )
 
-    def test_returned_slip_without_consent_is_rejected(self):
+    def test_returned_slip_without_consent_is_allowed(self):
         response = TripResponse(
             trip=self.trip,
             student=self.student,
@@ -76,10 +76,22 @@ class TripResponseValidationTestCase(TestCase):
             consent_given=False,
         )
 
+        response.full_clean()
+
+        self.assertFalse(response.consent_given)
+
+    def test_consent_without_parent_signature_is_rejected(self):
+        response = TripResponse(
+            trip=self.trip,
+            student=self.student,
+            emergency_contact_number='07123456789',
+            consent_given=True,
+        )
+
         with self.assertRaises(ValidationError) as raised:
             response.full_clean()
 
-        self.assertIn('consent_given', raised.exception.message_dict)
+        self.assertIn('parent_signature_name', raised.exception.message_dict)
 
 
 class TripReportCsvExportTestCase(TestCase):
