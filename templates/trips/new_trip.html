@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create New Trip - TripAdmin{% endblock %}
+
+{% block content %}
+<h1>Create New Trip</h1>
+<p class="lead">Plan your next adventure.</p>
+<hr>
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post" class="form">
+            {% csrf_token %}
+            <!-- Form fields will be added here when the Trip model is created -->
+            <div class="alert alert-info" role="alert">
+                <strong>Note:</strong> Trip form will be displayed once the Trip model is configured.
+            </div>
+            <button type="submit" class="btn btn-primary">Create Trip</button>
+            <a href="{% url 'trips:trips_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,4 @@
+Django>=4.2,<5.0
+django-crispy-forms>=2.1
+weasyprint>=60.0
+python-decouple>=3.8

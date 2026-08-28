@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Trips - TripAdmin{% endblock %}
+
+{% block content %}
+<h1>Trips</h1>
+<p class="lead">View and manage all your trips.</p>
+<hr>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Trip Name</th>
+                <th>Destination</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="5" class="text-center text-muted">No trips found. <a href="{% url 'trips:new_trip' %}">Create one now!</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<a href="{% url 'trips:new_trip' %}" class="btn btn-success">Add New Trip</a>
+{% endblock %}

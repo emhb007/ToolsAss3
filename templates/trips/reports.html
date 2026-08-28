@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports - TripAdmin{% endblock %}
+
+{% block content %}
+<h1>Trip Reports</h1>
+<p class="lead">Analyze your trips with detailed reports and statistics.</p>
+<hr>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">📊 Trip Statistics</h5>
+                <p class="card-text">View overall statistics about your trips.</p>
+                <button class="btn btn-outline-primary" disabled>Coming Soon</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">📄 Generate PDF Report</h5>
+                <p class="card-text">Export your trips as a PDF document.</p>
+                <button class="btn btn-outline-success" disabled>Coming Soon</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="alert alert-info" role="alert">
+            <strong>Reports are coming soon!</strong> Check back later for detailed trip analytics and PDF export functionality.
+        </div>
+    </div>
+</div>
+
+<a href="{% url 'trips:trips_list' %}" class="btn btn-secondary">Back to Trips</a>
+{% endblock %}

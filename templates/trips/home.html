@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - TripAdmin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Welcome to TripAdmin</h1>
+        <p class="lead">Manage your trips efficiently with our comprehensive trip management system.</p>
+        <hr>
+        <div class="row mt-5">
+            <div class="col-md-4 text-center">
+                <h4>📋 Manage Trips</h4>
+                <p>View, create, and edit all your trips in one place.</p>
+                <a href="{% url 'trips:trips_list' %}" class="btn btn-primary">Go to Trips</a>
+            </div>
+            <div class="col-md-4 text-center">
+                <h4>➕ Create New Trip</h4>
+                <p>Start planning your next adventure with our easy trip creation wizard.</p>
+                <a href="{% url 'trips:new_trip' %}" class="btn btn-success">New Trip</a>
+            </div>
+            <div class="col-md-4 text-center">
+                <h4>📊 View Reports</h4>
+                <p>Analyze your trips with detailed reports and statistics.</p>
+                <a href="{% url 'trips:reports' %}" class="btn btn-info">Reports</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
