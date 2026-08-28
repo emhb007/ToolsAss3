@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'crispy_bootstrap5',
     'trips',
 ]
 
@@ -135,3 +136,6 @@ MAILERS = {
 CSRF_TRUSTED_ORIGINS = [
     "https://ablaze-glory-boneless.ngrok-free.dev",
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap5',)
