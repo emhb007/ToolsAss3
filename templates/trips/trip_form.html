@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}Create New Trip - TripAdmin{% endblock %}
+{% block title %}{% if object %}Edit Trip{% else %}Create New Trip{% endif %} - TripAdmin{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-        <h1>Create New Trip</h1>
-        <p class="lead">Plan your next school trip.</p>
+        <h1>{% if object %}Edit Trip{% else %}Create New Trip{% endif %}</h1>
+        <p class="lead">{% if object %}Update the details for this school trip.{% else %}Plan your next school trip.{% endif %}</p>
         <hr class="my-4">
         
         {% if form.non_field_errors %}

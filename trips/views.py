@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 import csv
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.db.models import Count, Q
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
@@ -131,12 +131,13 @@ class TripReportView(LoginRequiredMixin, DetailView):
         return context
 
 
-class TripCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    """Create view for new trips, restricted to staff users."""
+class TripCreateView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, CreateView):
+    """Create view for trips restricted to staff with management permission."""
     
     model = Trip
     form_class = TripForm
     template_name = 'trips/trip_form.html'
+    permission_required = 'trips.can_manage_trips'
     
     def test_func(self):
         """Check if user is staff."""
@@ -152,11 +153,30 @@ class TripCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return reverse_lazy('trips:trip_detail', kwargs={'pk': self.object.pk})
 
 
+class TripUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Edit view for trips restricted to staff with management permission."""
+
+    model = Trip
+    form_class = TripForm
+    template_name = 'trips/trip_form.html'
+    permission_required = 'trips.can_manage_trips'
+
+    def test_func(self):
+        """Check if the user is staff."""
+        return self.request.user.is_staff
+
+    def get_success_url(self):
+        """Redirect to the trip detail page after saving."""
+        return reverse_lazy('trips:trip_detail', kwargs={'pk': self.object.pk})
+
+
 def new_trip(request):
     """Create a new trip."""
     return render(request, 'trips/new_trip.html')
 
 
+@login_required
+@user_passes_test(lambda user: user.is_staff)
 def record_slip(request, trip_id, student_id):
     """Record a student's trip response/permission slip."""
     # Get the trip and student, or return 404 if not found

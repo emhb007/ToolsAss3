@@ -40,6 +40,9 @@ class Trip(models.Model):
         ordering = ['-trip_date']
         verbose_name = 'Trip'
         verbose_name_plural = 'Trips'
+        permissions = [
+            ('can_manage_trips', 'Can create and edit trips'),
+        ]
     
     def __str__(self):
         """Return string representation of the trip."""
