@@ -8,7 +8,7 @@ class TripResponseInline(admin.TabularInline):
     model = TripResponse
     extra = 1
     fields = ('student', 'slip_returned', 'date_returned', 'payment_received', 'consent_given')
-    readonly_fields = ('student',)
+    #readonly_fields = ('student',)
 
 
 @admin.register(Trip)
@@ -61,7 +61,7 @@ class TripResponseAdmin(admin.ModelAdmin):
     list_display = ('student', 'trip', 'slip_returned', 'payment_received', 'consent_given')
     list_filter = ('trip', 'slip_returned', 'payment_received', 'consent_given', 'date_returned')
     search_fields = ('student__first_name', 'student__last_name', 'trip__name')
-    readonly_fields = ('trip', 'student')
+    #readonly_fields = ('trip', 'student')
     
     fieldsets = (
         ('Trip & Student', {

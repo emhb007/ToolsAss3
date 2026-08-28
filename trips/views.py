@@ -10,7 +10,6 @@ from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from weasyprint import HTML
 from io import BytesIO
 from pypdf import PdfReader, PdfWriter
 from .models import Trip, TripResponse, Student
@@ -261,6 +260,8 @@ def generate_slip_pdf(request, trip_id, student_id=None):
     Emergency contacts, medical needs, and parent signatures must be handled
     according to the school's data protection policy.
     """
+    from weasyprint import HTML
+
     trip = get_object_or_404(Trip, pk=trip_id)
     student = None
     
@@ -301,6 +302,8 @@ def generate_all_slips_pdf(request, trip_id):
     The exported emergency contacts, medical needs, and parent signatures must
     be handled according to the school's data protection policy.
     """
+    from weasyprint import HTML
+
     trip = get_object_or_404(Trip, pk=trip_id)
     pdf_writer = PdfWriter()
 
