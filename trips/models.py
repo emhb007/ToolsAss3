@@ -51,6 +51,16 @@ class Trip(models.Model):
             raise ValidationError(
                 'Permission deadline must be before the trip date.'
             )
+    
+    def total_expected_income(self):
+        """Calculate total expected income (cost * total number of linked students)."""
+        total_students = self.students.count()
+        return self.cost * total_students
+    
+    def total_collected_income(self):
+        """Calculate total collected income (cost * count of paid responses)."""
+        paid_responses = self.responses.filter(payment_received=True).count()
+        return self.cost * paid_responses
 
 
 class Student(models.Model):
