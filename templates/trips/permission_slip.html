@@ -457,11 +457,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="student_name">Student Name:</label>
-                        <input type="text" id="student_name" name="student_name" placeholder="">
+                        <input type="text" id="student_name" name="student_name" placeholder="" {% if prefill_student %}value="{{ prefill_student.first_name }} {{ prefill_student.last_name }}"{% endif %}>
                     </div>
                     <div class="form-group">
                         <label for="form_class">Form/Class:</label>
-                        <input type="text" id="form_class" name="form_class" placeholder="">
+                        <input type="text" id="form_class" name="form_class" placeholder="" {% if prefill_student %}value="{{ prefill_student.form_class }}"{% endif %}>
                     </div>
                 </div>
 

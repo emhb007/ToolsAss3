@@ -12,6 +12,7 @@
         <a href="{% url 'trips:trips_list' %}" class="btn btn-outline-secondary">Back to Trips</a>
         <a href="{% url 'trips:permission_slip' trip.pk %}" class="btn btn-outline-info" target="_blank">🖨️ Permission Slip</a>
         <a href="#" class="btn btn-outline-primary">Edit Trip</a>
+        <a href="{% url 'trips:download_slip_pdf' trip.pk %}" class="btn btn-outline-success">⬇️ PDF</a>
     </div>
 </div>
 
@@ -170,6 +171,7 @@
                                 <td>{{ response.emergency_contact_number }}</td>
                                 <td>
                                     <a href="{% url 'trips:record_slip' trip.pk response.student.pk %}" class="btn btn-sm btn-outline-primary">Record</a>
+                                                                    <a href="{% url 'trips:download_slip_pdf_student' trip.pk response.student.pk %}" class="btn btn-sm btn-outline-success" title="Download as PDF">PDF</a>
                                 </td>
                             </tr>
                         {% endfor %}

@@ -4,6 +4,10 @@ from django.urls import reverse_lazy
 from django.db.models import Count, Q
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from io import BytesIO
 from .models import Trip, TripResponse, Student
 from .forms import TripForm, TripResponseForm
 
@@ -172,6 +176,42 @@ def permission_slip(request, trip_id):
     }
     
     return render(request, 'trips/permission_slip.html', context)
+
+
+def generate_slip_pdf(request, trip_id, student_id=None):
+    """Generate a PDF permission slip for a trip, optionally pre-filled with a student."""
+    trip = get_object_or_404(Trip, pk=trip_id)
+    student = None
+    
+    if student_id:
+        student = get_object_or_404(Student, pk=student_id)
+    
+    context = {
+        'trip': trip,
+        'prefill_student': student,
+    }
+    
+    # Render the HTML template to a string
+    html_string = render_to_string('trips/permission_slip.html', context)
+    
+    # Convert HTML to PDF using WeasyPrint
+    html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+    pdf_bytes = html.write_pdf()
+    
+    # Create HTTP response with PDF
+    response = HttpResponse(pdf_bytes, content_type='application/pdf')
+    
+    # Set filename for download
+    if student:
+        filename = f'permission_slip_{student.first_name}_{student.last_name}_{trip.name}.pdf'
+    else:
+        filename = f'permission_slip_{trip.name}.pdf'
+    
+    # Sanitize filename
+    filename = filename.replace(' ', '_').replace('/', '_')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    return response
 
 
 def reports(request):
