@@ -1,0 +1,174 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1000,
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "sample_staff",
+      "first_name": "Sample",
+      "last_name": "Staff",
+      "email": "sample.staff@example.invalid",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2026-08-28T09:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "trips.trip",
+    "pk": 100,
+    "fields": {
+      "name": "Sample Science Museum Visit",
+      "destination": "Example Science Museum",
+      "trip_date": "2026-10-15",
+      "departure_time": "09:00:00",
+      "return_time": "16:30:00",
+      "cost": "25.00",
+      "permission_deadline": "2026-10-01",
+      "packed_lunch_required": true,
+      "year_group": "Year 8",
+      "created_by": 1000,
+      "created_at": "2026-08-28T09:05:00Z"
+    }
+  },
+  {
+    "model": "trips.trip",
+    "pk": 101,
+    "fields": {
+      "name": "Sample History Centre Visit",
+      "destination": "Example History Centre",
+      "trip_date": "2026-09-30",
+      "departure_time": "08:30:00",
+      "return_time": "15:30:00",
+      "cost": "18.50",
+      "permission_deadline": "2026-08-20",
+      "packed_lunch_required": false,
+      "year_group": "Year 9",
+      "created_by": 1000,
+      "created_at": "2026-08-28T09:10:00Z"
+    }
+  },
+  {
+    "model": "trips.student",
+    "pk": 1001,
+    "fields": {
+      "first_name": "Test",
+      "last_name": "Student One",
+      "form_class": "8A"
+    }
+  },
+  {
+    "model": "trips.student",
+    "pk": 1002,
+    "fields": {
+      "first_name": "Test",
+      "last_name": "Student Two",
+      "form_class": "8A"
+    }
+  },
+  {
+    "model": "trips.student",
+    "pk": 1003,
+    "fields": {
+      "first_name": "Demo",
+      "last_name": "Student Three",
+      "form_class": "8B"
+    }
+  },
+  {
+    "model": "trips.student",
+    "pk": 1004,
+    "fields": {
+      "first_name": "Demo",
+      "last_name": "Student Four",
+      "form_class": "9A"
+    }
+  },
+  {
+    "model": "trips.student",
+    "pk": 1005,
+    "fields": {
+      "first_name": "Demo",
+      "last_name": "Student Five",
+      "form_class": "9A"
+    }
+  },
+  {
+    "model": "trips.tripresponse",
+    "pk": 10001,
+    "fields": {
+      "trip": 100,
+      "student": 1001,
+      "slip_returned": true,
+      "date_returned": "2026-08-29",
+      "payment_received": true,
+      "emergency_contact_number": "07123456789",
+      "medical_needs": "",
+      "parent_signature_name": "Example Parent",
+      "consent_given": true
+    }
+  },
+  {
+    "model": "trips.tripresponse",
+    "pk": 10002,
+    "fields": {
+      "trip": 100,
+      "student": 1002,
+      "slip_returned": false,
+      "date_returned": null,
+      "payment_received": false,
+      "emergency_contact_number": "07234567890",
+      "medical_needs": "",
+      "parent_signature_name": "",
+      "consent_given": false
+    }
+  },
+  {
+    "model": "trips.tripresponse",
+    "pk": 10003,
+    "fields": {
+      "trip": 100,
+      "student": 1003,
+      "slip_returned": true,
+      "date_returned": "2026-08-30",
+      "payment_received": true,
+      "emergency_contact_number": "07345678901",
+      "medical_needs": "Peanut allergy",
+      "parent_signature_name": "Demo Parent",
+      "consent_given": true
+    }
+  },
+  {
+    "model": "trips.tripresponse",
+    "pk": 10004,
+    "fields": {
+      "trip": 101,
+      "student": 1004,
+      "slip_returned": false,
+      "date_returned": null,
+      "payment_received": false,
+      "emergency_contact_number": "07456789012",
+      "medical_needs": "Requires prescribed inhaler",
+      "parent_signature_name": "",
+      "consent_given": false
+    }
+  },
+  {
+    "model": "trips.tripresponse",
+    "pk": 10005,
+    "fields": {
+      "trip": 101,
+      "student": 1005,
+      "slip_returned": true,
+      "date_returned": "2026-08-25",
+      "payment_received": true,
+      "emergency_contact_number": "07567890123",
+      "medical_needs": "",
+      "parent_signature_name": "Sample Guardian",
+      "consent_given": true
+    }
+  }
+]
