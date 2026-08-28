@@ -1,0 +1,59 @@
+:root {
+    --ink-navy: #1B2A4A;
+    --warm-amber: #E8A33D;
+    --off-white: #FAF8F5;
+}
+
+body {
+    background-color: var(--off-white);
+    color: var(--ink-navy);
+}
+
+.navbar-dark.bg-dark,
+footer.bg-dark {
+    background-color: var(--ink-navy) !important;
+}
+
+.navbar-brand,
+.nav-link {
+    color: var(--off-white) !important;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--warm-amber) !important;
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--ink-navy);
+    --bs-btn-border-color: var(--ink-navy);
+    --bs-btn-hover-bg: #142039;
+    --bs-btn-hover-border-color: #142039;
+}
+
+.btn-success,
+.btn-info {
+    --bs-btn-bg: var(--warm-amber);
+    --bs-btn-border-color: var(--warm-amber);
+    --bs-btn-color: var(--ink-navy);
+    --bs-btn-hover-bg: #d48e2b;
+    --bs-btn-hover-border-color: #d48e2b;
+    --bs-btn-hover-color: var(--ink-navy);
+}
+
+.card-header.bg-light,
+.card-header.bg-dark {
+    background-color: var(--ink-navy) !important;
+    color: var(--off-white);
+}
+
+.badge.bg-primary,
+.progress-bar.bg-primary {
+    background-color: var(--ink-navy) !important;
+}
+
+.badge.bg-warning,
+.progress-bar.bg-warning {
+    background-color: var(--warm-amber) !important;
+    color: var(--ink-navy);
+}

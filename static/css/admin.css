@@ -1,0 +1,80 @@
+:root {
+    --ink-navy: #1B2A4A;
+    --warm-amber: #E8A33D;
+    --off-white: #FAF8F5;
+}
+
+body {
+    background: var(--off-white);
+}
+
+#header,
+.module h2,
+.module caption,
+.inline-group h2 {
+    background: var(--ink-navy);
+}
+
+#header a:link,
+#header a:visited,
+#user-tools,
+#user-tools a:link,
+#user-tools a:visited {
+    color: var(--off-white);
+}
+
+#header a:hover,
+#user-tools a:hover {
+    color: var(--warm-amber);
+}
+
+div.breadcrumbs {
+    background: var(--warm-amber);
+    color: var(--ink-navy);
+}
+
+a:link,
+a:visited {
+    color: var(--ink-navy);
+}
+
+a:hover,
+a:focus {
+    color: #8b5d16;
+}
+.button,
+input[type=submit],
+input[type=button],
+.submit-row input,
+a.button {
+    background: var(--ink-navy);
+    color: var(--off-white);
+}
+
+.button:hover,
+input[type=submit]:hover,
+input[type=button]:hover,
+.submit-row input:hover,
+a.button:hover {
+    background: var(--warm-amber);
+    color: var(--ink-navy);
+}
+.object-tools a {
+    background: var(--warm-amber);
+    color: var(--ink-navy);
+}
+
+.object-tools a:hover {
+    background: #d48e2b;
+}
+
+#content-related .module,
+.module,
+.inline-group {
+    border-color: var(--warm-amber);
+}
+
+.row1,
+.row2 {
+    background: var(--off-white);
+}
