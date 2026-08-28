@@ -14,6 +14,7 @@
         <a href="#" class="btn btn-outline-primary">Edit Trip</a>
         <a href="{% url 'trips:download_slip_pdf' trip.pk %}" class="btn btn-outline-success">⬇️ PDF</a>
         <a href="{% url 'trips:download_all_slips_pdf' trip.pk %}" class="btn btn-success">⬇️ Full Class PDF</a>
+        <a href="{% url 'trips:trip_report' trip.pk %}" class="btn btn-outline-dark">Report</a>
     </div>
 </div>
 

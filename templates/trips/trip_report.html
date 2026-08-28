@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ trip.name }} Report - TripAdmin{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <h1>{{ trip.name }}</h1>
+        <p class="lead text-muted mb-0">{{ trip.destination }} | {{ trip.trip_date|date:"d M Y" }}</p>
+    </div>
+    <a href="{% url 'trips:trip_detail' trip.pk %}" class="btn btn-outline-secondary">Back to Trip</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6 col-xl-3">
+        <div class="card h-100 border-primary">
+            <div class="card-body">
+                <h2 class="h6 text-uppercase text-muted">Total Students</h2>
+                <p class="display-6 mb-0">{{ total_students }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card h-100 border-success">
+            <div class="card-body">
+                <h2 class="h6 text-uppercase text-muted">Slips Returned</h2>
+                <p class="display-6 text-success mb-1">{{ returned_count }}</p>
+                <p class="mb-0">{{ returned_percentage|floatformat:0 }}% of students</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card h-100 border-danger">
+            <div class="card-body">
+                <h2 class="h6 text-uppercase text-muted">Still Outstanding</h2>
+                <p class="display-6 text-danger mb-1">{{ outstanding_count }}</p>
+                <p class="mb-0">{{ outstanding_percentage|floatformat:0 }}% of students</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card h-100 border-warning">
+            <div class="card-body">
+                <h2 class="h6 text-uppercase text-muted">Payments Received</h2>
+                <p class="display-6 text-warning mb-0">{{ payments_received_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header bg-danger-subtle">
+                <h2 class="h5 mb-0">Outstanding Students</h2>
+            </div>
+            <div class="card-body">
+                {% if outstanding_students %}
+                    <ul class="list-group list-group-flush">
+                        {% for response in outstanding_students %}
+                            <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                <span>{{ response.student.first_name }} {{ response.student.last_name }}</span>
+                                <a href="{% url 'trips:record_slip' trip.pk response.student.pk %}" class="btn btn-sm btn-outline-primary">Record</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-success mb-0">All permission slips have been returned.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header bg-light">
+                <h2 class="h5 mb-0">Income</h2>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-7">Collected</dt>
+                    <dd class="col-sm-5 text-end">£{{ total_collected_income|floatformat:2 }}</dd>
+                    <dt class="col-sm-7">Expected</dt>
+                    <dd class="col-sm-5 text-end">£{{ total_expected_income|floatformat:2 }}</dd>
+                    <dt class="col-sm-7 border-top pt-2">Outstanding</dt>
+                    <dd class="col-sm-5 text-end border-top pt-2">£{{ total_outstanding_income|floatformat:2 }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-warning-subtle">
+                <h2 class="h5 mb-0">Medical Needs Flagged</h2>
+            </div>
+            <div class="card-body">
+                {% if medical_needs_responses %}
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Medical Needs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for response in medical_needs_responses %}
+                                    <tr>
+                                        <td>{{ response.student.first_name }} {{ response.student.last_name }}</td>
+                                        <td>{{ response.medical_needs }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No medical needs have been flagged.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

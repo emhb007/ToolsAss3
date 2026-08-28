@@ -98,6 +98,38 @@ class TripDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+class TripReportView(LoginRequiredMixin, DetailView):
+    """Display a summary report for one trip."""
+
+    model = Trip
+    template_name = 'trips/trip_report.html'
+    context_object_name = 'trip'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        trip = self.object
+        responses = TripResponse.objects.filter(trip=trip).select_related('student')
+        total_students = responses.count()
+        returned_count = responses.filter(slip_returned=True).count()
+        outstanding_responses = responses.filter(slip_returned=False)
+        outstanding_count = outstanding_responses.count()
+
+        context.update({
+            'total_students': total_students,
+            'returned_count': returned_count,
+            'returned_percentage': (returned_count / total_students * 100) if total_students else 0,
+            'outstanding_count': outstanding_count,
+            'outstanding_percentage': (outstanding_count / total_students * 100) if total_students else 0,
+            'outstanding_students': outstanding_responses,
+            'payments_received_count': responses.filter(payment_received=True).count(),
+            'total_collected_income': trip.total_collected_income(),
+            'total_expected_income': trip.total_expected_income(),
+            'total_outstanding_income': trip.total_expected_income() - trip.total_collected_income(),
+            'medical_needs_responses': responses.exclude(medical_needs='').exclude(medical_needs__isnull=True),
+        })
+        return context
+
+
 class TripCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     """Create view for new trips, restricted to staff users."""
     
