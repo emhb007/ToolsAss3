@@ -3,6 +3,10 @@ from .models import Trip, Student, TripResponse
 
 # Register your models here.
 
+admin.site.site_header = 'School Trip Tracker 2026'
+admin.site.site_title = 'School Trip Tracker 2026'
+admin.site.index_title = 'School Trip Tracker 2026'
+
 class TripResponseInline(admin.TabularInline):
     """Inline admin for TripResponse."""
     model = TripResponse
