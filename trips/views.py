@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from django.urls import reverse_lazy
 from django.db.models import Count, Q
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Trip, TripResponse
+from .forms import TripForm
 
 # Create your views here.
 
@@ -85,6 +87,27 @@ class TripDetailView(LoginRequiredMixin, DetailView):
         context['responses'] = TripResponse.objects.filter(trip=trip).select_related('student')
         
         return context
+
+
+class TripCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    """Create view for new trips, restricted to staff users."""
+    
+    model = Trip
+    form_class = TripForm
+    template_name = 'trips/trip_form.html'
+    
+    def test_func(self):
+        """Check if user is staff."""
+        return self.request.user.is_staff
+    
+    def form_valid(self, form):
+        """Set created_by to the current user."""
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        """Redirect to trip detail page on success."""
+        return reverse_lazy('trips:trip_detail', kwargs={'pk': self.object.pk})
 
 
 def new_trip(request):
