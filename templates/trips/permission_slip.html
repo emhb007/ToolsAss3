@@ -1,0 +1,511 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permission Slip - {{ trip.name }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 20px auto;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Letter Section */
+        .letter-section {
+            padding: 40px 50px;
+            page-break-after: avoid;
+        }
+
+        .school-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 15px;
+        }
+
+        .school-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .school-header p {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .letter-date {
+            text-align: right;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .letter-content h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .letter-content p {
+            margin-bottom: 12px;
+            text-align: justify;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .trip-details {
+            background-color: #ecf0f1;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+        }
+
+        .trip-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .trip-detail-item {
+            font-size: 13px;
+        }
+
+        .trip-detail-item strong {
+            display: block;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .trip-detail-item span {
+            color: #555;
+        }
+
+        .closing {
+            margin-top: 25px;
+            font-size: 14px;
+        }
+
+        .closing p {
+            margin-bottom: 10px;
+        }
+
+        .signature-line {
+            display: inline-block;
+            margin-top: 15px;
+            border-bottom: 1px solid #333;
+            width: 150px;
+            height: 30px;
+        }
+
+        /* Tear-off Line */
+        .tear-off-line {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .tear-off-line::before {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: repeating-linear-gradient(
+                to right,
+                #999 0px,
+                #999 10px,
+                white 10px,
+                white 15px
+            );
+        }
+
+        .tear-off-line::after {
+            content: '✂ TEAR HERE ✂';
+            padding: 0 15px;
+            font-size: 12px;
+            color: #999;
+            font-weight: bold;
+        }
+
+        /* Permission Slip Section */
+        .slip-section {
+            padding: 30px 50px;
+            background-color: #fafafa;
+            page-break-inside: avoid;
+        }
+
+        .slip-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .slip-header h3 {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .slip-header p {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .slip-form {
+            font-size: 13px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group textarea {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #333;
+            padding: 8px 0;
+            font-family: inherit;
+            font-size: 13px;
+            background-color: transparent;
+            color: #333;
+        }
+
+        .form-group textarea {
+            min-height: 50px;
+            resize: vertical;
+            border: 1px solid #333;
+            padding: 8px;
+            border-radius: 2px;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="date"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-bottom-color: #3498db;
+            box-shadow: 0 2px 0 #3498db;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .signature-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .signature-section p {
+            font-size: 12px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .signature-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+
+        .sig-line {
+            text-align: center;
+        }
+
+        .sig-line .line {
+            border-bottom: 1px solid #333;
+            height: 50px;
+            margin-bottom: 5px;
+        }
+
+        .sig-line .label {
+            font-size: 11px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .consent-checkbox {
+            margin-top: 20px;
+        }
+
+        .consent-checkbox input[type="checkbox"] {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .consent-checkbox label {
+            display: inline;
+            font-weight: normal;
+            text-transform: none;
+            letter-spacing: normal;
+            font-size: 12px;
+            color: #333;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: white;
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                max-width: 100%;
+                margin: 0;
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .letter-section,
+            .slip-section {
+                page-break-inside: avoid;
+            }
+
+            .tear-off-line::before {
+                background: repeating-linear-gradient(
+                    to right,
+                    #333 0px,
+                    #333 10px,
+                    white 10px,
+                    white 15px
+                );
+            }
+
+            .tear-off-line::after {
+                color: #333;
+            }
+
+            input[type="text"],
+            input[type="date"],
+            textarea {
+                background-color: white !important;
+                border: none;
+                border-bottom: 1px solid #333 !important;
+            }
+
+            input:focus,
+            textarea:focus {
+                box-shadow: none !important;
+                outline: none !important;
+            }
+        }
+
+        /* A4 Print Size */
+        @page {
+            size: A4;
+            margin: 0.5in;
+            orphans: 3;
+            widows: 3;
+        }
+
+        .print-button {
+            text-align: center;
+            padding: 20px;
+            background-color: #ecf0f1;
+            margin-top: 20px;
+        }
+
+        .print-button button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .print-button button:hover {
+            background-color: #2980b9;
+        }
+
+        @media print {
+            .print-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- LETTER SECTION -->
+        <div class="letter-section">
+            <div class="school-header">
+                <h1>School Trip Permission Letter</h1>
+                <p>TripAdmin — Student Travel Management</p>
+            </div>
+
+            <div class="letter-date">
+                {% now "j F Y" %}
+            </div>
+
+            <div class="letter-content">
+                <h2>Trip: {{ trip.name }}</h2>
+
+                <p>Dear Parent/Guardian,</p>
+
+                <p>We are pleased to inform you that we have arranged an educational trip for your child to <strong>{{ trip.destination }}</strong>. This letter provides you with important details about the trip and requires your signed permission for your child to participate.</p>
+
+                <div class="trip-details">
+                    <strong style="display: block; color: #2c3e50; margin-bottom: 10px;">📋 Trip Details</strong>
+                    <div class="trip-details-grid">
+                        <div class="trip-detail-item">
+                            <strong>Destination:</strong>
+                            <span>{{ trip.destination }}</span>
+                        </div>
+                        <div class="trip-detail-item">
+                            <strong>Date:</strong>
+                            <span>{{ trip.trip_date|date:"d F Y" }}</span>
+                        </div>
+                        <div class="trip-detail-item">
+                            <strong>Departure Time:</strong>
+                            <span>{{ trip.departure_time|time:"H:i" }}</span>
+                        </div>
+                        <div class="trip-detail-item">
+                            <strong>Return Time:</strong>
+                            <span>{{ trip.return_time|time:"H:i" }}</span>
+                        </div>
+                        <div class="trip-detail-item">
+                            <strong>Cost per Student:</strong>
+                            <span>£{{ trip.cost }}</span>
+                        </div>
+                        <div class="trip-detail-item">
+                            <strong>Year Group:</strong>
+                            <span>{{ trip.year_group }}</span>
+                        </div>
+                        <div class="trip-detail-item">
+                            <strong>Packed Lunch:</strong>
+                            <span>
+                                {% if trip.packed_lunch_required %}
+                                    Required
+                                {% else %}
+                                    Not Required
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="trip-detail-item">
+                            <strong>Permission Deadline:</strong>
+                            <span>{{ trip.permission_deadline|date:"d F Y" }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p>Your child will be under the supervision of school staff throughout the duration of the trip. We take safety very seriously and all activities will be conducted in accordance with our safeguarding policies.</p>
+
+                <p>Please complete the permission slip section below with all requested information and return it before the deadline specified above. Your signature confirms that you give permission for your child to participate in this trip and that you have provided accurate emergency contact information.</p>
+
+                <p>If you have any questions or concerns about this trip, please do not hesitate to contact us.</p>
+
+                <div class="closing">
+                    <p>Yours sincerely,</p>
+                    <div class="signature-line"></div>
+                    <p>School Trip Coordinator</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TEAR-OFF LINE -->
+        <div class="tear-off-line"></div>
+
+        <!-- PERMISSION SLIP SECTION -->
+        <div class="slip-section">
+            <div class="slip-header">
+                <h3>PERMISSION SLIP (Please Complete & Return)</h3>
+                <p>Trip: {{ trip.name }} — {{ trip.destination }} | {{ trip.trip_date|date:"d F Y" }}</p>
+            </div>
+
+            <form class="slip-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="student_name">Student Name:</label>
+                        <input type="text" id="student_name" name="student_name" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="form_class">Form/Class:</label>
+                        <input type="text" id="form_class" name="form_class" placeholder="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="emergency_contact">Emergency Contact Number:</label>
+                    <input type="text" id="emergency_contact" name="emergency_contact" placeholder="Mobile or landline">
+                </div>
+
+                <div class="form-group">
+                    <label for="medical_needs">Medical Needs / Allergies / Medications:</label>
+                    <textarea id="medical_needs" name="medical_needs" placeholder="Please provide any relevant medical information"></textarea>
+                </div>
+
+                <div class="consent-checkbox">
+                    <input type="checkbox" id="consent" name="consent">
+                    <label for="consent">I give permission for my child to participate in this trip and confirm that the information provided above is accurate and complete.</label>
+                </div>
+
+                <div class="signature-section">
+                    <p>Parent/Guardian Authorisation:</p>
+                    <div class="signature-box">
+                        <div class="sig-line">
+                            <div class="line"></div>
+                            <div class="label">Parent/Guardian Signature</div>
+                        </div>
+                        <div class="sig-line">
+                            <div class="line"></div>
+                            <div class="label">Date</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="print-button">
+        <button onclick="window.print()">🖨️ Print Permission Slip</button>
+    </div>
+
+    <script>
+        // Optional: Auto-focus first field
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('student_name').focus();
+        });
+    </script>
+</body>
+</html>

@@ -10,6 +10,7 @@
     </div>
     <div class="col-md-4 text-end">
         <a href="{% url 'trips:trips_list' %}" class="btn btn-outline-secondary">Back to Trips</a>
+        <a href="{% url 'trips:permission_slip' trip.pk %}" class="btn btn-outline-info" target="_blank">🖨️ Permission Slip</a>
         <a href="#" class="btn btn-outline-primary">Edit Trip</a>
     </div>
 </div>

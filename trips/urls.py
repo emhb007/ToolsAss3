@@ -9,5 +9,6 @@ urlpatterns = [
     path('trips/<int:pk>/', views.TripDetailView.as_view(), name='trip_detail'),
     path('trips/new/', views.TripCreateView.as_view(), name='new_trip'),
     path('trips/<int:trip_id>/student/<int:student_id>/record/', views.record_slip, name='record_slip'),
+    path('trips/<int:trip_id>/permission-slip/', views.permission_slip, name='permission_slip'),
     path('reports/', views.reports, name='reports'),
 ]

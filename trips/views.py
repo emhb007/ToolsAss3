@@ -163,6 +163,16 @@ def record_slip(request, trip_id, student_id):
     return render(request, 'trips/record_slip.html', context)
 
 
+def permission_slip(request, trip_id):
+    """Render a printable permission slip letter for a trip."""
+    trip = get_object_or_404(Trip, pk=trip_id)
+    
+    context = {
+        'trip': trip,
+    }
+    
+    return render(request, 'trips/permission_slip.html', context)
+
 
 def reports(request):
     """Generate and view reports."""

@@ -42,7 +42,7 @@
                         </td>
                         <td>
                             <a href="{% url 'trips:trip_detail' trip.pk %}" class="btn btn-sm btn-outline-primary">View</a>
-                            <a href="#" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a href="{% url 'trips:permission_slip' trip.pk %}" class="btn btn-sm btn-outline-info" target="_blank">Slip</a>
                         </td>
                     </tr>
                 {% endfor %}
